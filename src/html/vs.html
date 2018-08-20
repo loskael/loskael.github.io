@@ -1,0 +1,165 @@
+<!--#insert file="../template/-intro.html" -->
+<title>VS</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<!--#insert file="../template/-outro.html" -->
+<style>
+  #main {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .stage div {
+    border: 1px solid #333;
+    padding: 0 6px;
+    margin: 10px 10px 10px 0;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .stage div.on {
+    outline: 1px solid #0f0;
+  }
+
+  .stage div::before {
+    content: attr(data-index);
+    position: absolute;
+    line-height: 12px;
+    left: 1px;
+    top: 1px;
+  }
+
+  .stage div:nth-child(odd)::after {
+    content: '';
+    width: 10px;
+    height: 25px;
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+    position: absolute;
+    right: -11px;
+    top: 20px;
+  }
+
+  .stage div:nth-child(even)::after {
+    content: '';
+    width: 10px;
+    height: 25px;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    position: absolute;
+    right: -11px;
+    top: -5px;
+  }
+
+  .stage div.w,
+  .stage div.w:nth-child(odd)::after,
+  .stage div.w:nth-child(even)::after {
+    border-color: #f00;
+  }
+
+  .stage:nth-child(2) div {
+    margin: 62px 10px;
+  }
+
+  .stage:nth-child(3) div {
+    margin: 166px 10px;
+  }
+
+  .stage:nth-child(4) div {
+    margin: 372px 10px;
+  }
+
+  .stage:last-child div {
+    overflow: hidden;
+  }
+</style>
+<!--#insert file="../template/-header.html" -->
+<div id="main"></div>
+<!--#insert file="../template/-footer.html" -->
+<!--#insert file="../template/-script.html" -->
+<script>
+  const matchs = {
+    LANKE2023: [
+      `丁浩,许皓鋐`,
+      `连笑,关航太郎`,
+      `江维杰,阿里·贾巴林`,
+      `檀啸,许家元`,
+      `曹潇阳,朴键昊`,
+      `陶欣然,姜东润`,
+      `谢尔豪,井山裕太`,
+      `赵晨宇,朴廷桓`,
+      `唐韦星,卞相壹`,
+      `安成浚,余正麒`,
+      `李钦诚,申真谞`,
+      `王星昊,伊田笃史`,
+      `李轩豪,元晟溱`,
+      `柯洁,赖均辅`,
+      `李维清,漆圣颐`,
+      `辜梓豪,韩昇周`,
+    ].join(','),
+    GUOSHOU2023: [
+      `芈昱廷,黄云嵩`,
+      `童梦成,唐韦星`,
+      `柁嘉熹,党毅飞`,
+      `陶欣然,廖元赫`,
+      `谢科,范廷钰`,
+      `赵晨宇,江维杰`,
+      `张涛,李维清`,
+      `屠晓宇,辜梓豪`,
+      `杨鼎新,谢尔豪`,
+      `连笑,谭啸`,
+      `陈贤,伊凌涛`,
+      `李轩豪,时越`,
+      `王星昊,彭立尧`,
+      `杨凯文,陈梓健`,
+      `许嘉阳,李钦诚`,
+      `韩一洲,柯洁`,
+    ].join(','),
+  };
+  const params = new URLSearchParams(location.search);
+  const player = String(matchs[params.get('match')] || params.get('player') || '').split(',').filter(v => !!v);
+  const counts = (params.get('counts') >> 0) || player.length;
+  const result = String(params.get('result') || '').split(',').map((v, i) => parseInt(v, 16).toString(2).padStart(counts / (2 ** i), '0'));
+  const $main = document.getElementById('main');
+
+  const next = (winer = [], result = '') => {
+    if (!Array.isArray(winer) || !winer.length) return [];
+    const $root = document.createElement('div');
+    $root.classList.add('stage', 'stage' + winer.length);
+    $root.dataset.result = result;
+    winer.map((v, i) => {
+      const $el = document.createElement('div');
+      result[i] == 1 && $el.classList.add('w');
+      $el.setAttribute('data-index', i + 1);
+      $el.innerText = v;
+      $root.appendChild($el);
+    });
+    $main.appendChild($root);
+    return winer.filter((v, i) => result[i] === '1');
+  };
+
+  let round = Math.ceil(Math.log2(counts)) + 1;
+  let winer = player;
+  while (round > 0) {
+    winer = next(winer, result.shift());
+    --round;
+  }
+
+  const queryStageResult = $stage => [...$stage.querySelectorAll('div')]
+    .map($item => +$item.classList.contains('on')).join('');
+  [...document.querySelectorAll('.stage div')].forEach($el => {
+    $el.addEventListener('click', () => {
+      $el.classList.toggle('on');
+      const result = [...document.querySelectorAll('.stage')].map($stage => {
+        return $stage.dataset.result || queryStageResult($stage);
+      });
+      console.log('result =', result.map(v => parseInt(v, 2).toString(16)).join(','));
+    });
+  });
+</script>
+<!--#insert file="../template/-end.html" -->

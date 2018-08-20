@@ -1,0 +1,19 @@
+{
+  "name": "kael",
+  "version": "0.0.1",
+  "node_version": ">= 0.8.0",
+  "scripts": {
+    "start": "python3 -m http.server",
+    "build": "cd src && gulp && cd ..",
+    "postbuild": "mv html/index.html index.html && node tools/index.js"
+  },
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.10",
+    "gulp-htmlincluder": "^0.1.0",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-uglify": "^2.0.0",
+    "needle": "^1.4.1"
+  }
+}

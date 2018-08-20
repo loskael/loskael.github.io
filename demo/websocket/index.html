@@ -1,0 +1,10 @@
+<script>
+  !function() {
+    const message = 'hello, this is from client';
+    const socket = new WebSocket('ws://127.0.0.1:9090');
+    socket.onopen = function(event) {
+      console.log('message.length:', message.length);
+      socket.send(message);
+    };
+  }();
+</script>

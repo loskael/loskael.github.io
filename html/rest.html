@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="baidu-site-verification" content="1k9RalvJRS" />
+<title>Rest</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="/static/css/base.css">
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #main {
+    margin: 0 auto;
+    position: relative;
+  }
+</style>
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?74766352deaef64bd5be6a9c4445da55";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</head>
+<body>
+<header></header>
+<div id="main"></div>
+<footer>kael &copy; 2014-<script>document.write((new Date).getFullYear())</script></footer>
+
+<script src="/static/script/lib/zepto.min.js"></script>
+<script src="/static/script/lib/wechat.js"></script>
+<script src="/static/script/base/tools.js"></script>
+<script src="/static/script/base/bom.js"></script>
+<script src="/static/script/base/logger.js"></script>
+
+<script>
+  let main = document.getElementById('main');
+  let width = Math.min(window.innerHeight, window.innerWidth);
+  main.style.width = main.style.height = width + 'px';
+  let zpoint = width * .5;
+  let zindex = 1e9;
+  let zsteps = 1;
+  let ztimes = 0;
+  for (let i = 10; i < zpoint; i += 2 * zsteps) {
+    let div = document.createElement('div');
+    div.id = 'idx-' + i;
+    div.style.position = 'absolute';
+    div.style.border = zsteps + 'px solid #000';
+    div.style.width = div.style.height = (2 * i) + 'px';
+    div.style.left = div.style.top = (zpoint - i) + 'px';
+    main.appendChild(div);
+    if (!(++ztimes % 5)) {
+      zsteps += 1;
+      ztimes = 0;
+    }
+  }
+</script>
+</body></html>

@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="baidu-site-verification" content="1k9RalvJRS" />
+<title>lsctl</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="/static/css/base.css">
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-size: 20px;
+  }
+
+  .line {
+    padding: 20px;
+  }
+
+  label {
+    display: inline-block;
+    width: 120px;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 3px 0 3px 6px;
+    width: 360px;
+  }
+
+  textarea {
+    width: 1800px;
+  }
+
+  .ts,
+  .side-link {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    text-align: right;
+  }
+
+  .ts a {
+    display: block;
+  }
+
+  .side-link a {
+    display: block;
+  }
+
+  .side-link {
+    top: 250px;
+  }
+
+  #copy {
+    width: 80px;
+  }
+
+  fieldset {
+    width: 720px;
+    margin: 0 0 1em 1em;
+  }
+
+  legend {
+    margin-left: 1em;
+    padding: 0 8px;
+  }
+</style>
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?74766352deaef64bd5be6a9c4445da55";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</head>
+<body>
+<header></header>
+<fieldset>
+  <legend>Host</legend>
+
+  <div class="line">
+    <label for="host">Host</label>
+    <input type="text" name="host" id="host">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Date time</legend>
+
+  <div class="line">
+    <label for="date">Date</label>
+    <input type="date" name="date" id="date">
+  </div>
+
+  <div class="line">
+    <label for="tit">type=time</label>
+    <input type="checkbox" name="tit" id="tit" style="width:unset">
+  </div>
+
+  <div class="line">
+    <label for="begin">Begin</label>
+    <input type="text" name="begin" id="begin">
+  </div>
+
+  <div class="line">
+    <label for="end">End</label>
+    <input type="text" name="end" id="end">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Service info</legend>
+
+  <div class="line">
+    <label for="cluster">Cluster</label>
+    <select name="cluster" id="cluster">
+      <option value="">select cluster</option>
+      <option value="mc1">mc1</option>
+      <option value="kxc1">kxc1</option>
+      <option value="mcuat">mcuat</option>
+      <option value="cs1">cs1</option>
+      <option value="cs2">cs2</option>
+      <option value="cs3">cs3</option>
+      <option value="cs4">cs4</option>
+      <option value="cs5">cs5</option>
+      <option value="cs8">cs8</option>
+    </select>
+  </div>
+
+  <ol id="shortcuts" style="margin-left:146px"></ol>
+
+  <div class="line">
+    <label for="namespace">Namespace</label>
+    <input type="text" name="namespace" id="namespace" value="gfstore">
+  </div>
+
+  <div class="line">
+    <label for="serviceName">Name</label>
+    <input type="text" name="name" id="serviceName" value="super">
+  </div>
+
+  <div class="line">
+    <label for="version">Version</label>
+    <input type="text" name="version" id="version" value="1.0.0">
+  </div>
+
+  <div class="line">
+    <label for="pin" onclick="alert('You don\'t really need it')">Remove ?</label>
+    <input type="button" id="pin" value="Add shortcut">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Others</legend>
+
+  <div class="line">
+    <label for="version">Content Type</label>
+    <select name="contentType" id="contentType">
+      <option value="0">json</option>
+      <option value="1">encoding</option>
+      <option value="2" selected>raw</option>
+    </select>
+  </div>
+
+  <div class="line">
+    <label for="keyword">keyword</label>
+    <input type="text" name="keyword" id="keyword" value="">
+  </div>
+
+</fieldset>
+
+<div class="line">
+  <input type="button" id="copy" value="copy">
+</div>
+
+<div class="line">
+  <textarea name="cmd" id="cmd" cols="30" rows="10"></textarea>
+</div>
+
+<div class="ts" id="ts"></div>
+
+<div class="side-link" id="sidelink"></div>
+
+<footer>kael &copy; 2014-<script>document.write((new Date).getFullYear())</script></footer>
+
+<script src="/static/script/lib/zepto.min.js"></script>
+<script src="/static/script/lib/wechat.js"></script>
+<script src="/static/script/base/tools.js"></script>
+<script src="/static/script/base/bom.js"></script>
+<script src="/static/script/base/logger.js"></script>
+
+<script>
+  function timeStr(v) {
+    return ('' + v).split(':').filter(v => v).concat('00', '00', '00').slice(0, 3).join(':');
+  }
+  function initTime() {
+    let diff = parseInt(('' + location.hash).replace(/\D/g, ''), 10) || 15;
+    console.log('time diff:', diff);
+    let now = Date.now() + 8 * 60 * 60 * 1000;
+    date.value = new Date(now).toISOString().substring(0, 10);
+    if (location.hash == '#1d') {
+      begin.value = '00:00:00';
+      end.value = '23:59:59';
+    } else {
+      begin.value = new Date(now - diff * 60 * 1000).toISOString().substring(11, 19);
+      end.value = new Date(now).toISOString().substring(11, 19);
+    }
+  }
+  initTime();
+  window.onhashchange = initTime;
+  setInterval(() => {
+    if (host.value && host.value !== localStorage.inner_host) {
+      localStorage.inner_host = host.value;
+    }
+    begin.value = timeStr(begin.value);
+    end.value = timeStr(end.value);
+    var keyParam = '';
+    if (keyword.value) {
+      keyParam = ` --key "${keyword.value.replace(/"/g, '')}"`;
+    }
+    if (cluster.value) {
+      cmd.value = `rm *.log
+lsctl import -a --date ${date.value} --begin ${begin.value} --end ${end.value} --clusterTag ${cluster.value} --namespace ${namespace.value} --name ${serviceName.value} --version ${version.value} --contentType ${contentType.value}${keyParam}`;
+    } else {
+      cmd.value = `rm *.log
+lsctl import -a --date ${date.value} --begin ${begin.value} --end ${end.value} --clusterTag kxc1 --namespace ${namespace.value} --name ${serviceName.value} --version ${version.value} --contentType ${contentType.value}${keyParam}
+mv ${serviceName.value}.log ${serviceName.value}.kxc1.log
+lsctl import -a --date ${date.value} --begin ${begin.value} --end ${end.value} --clusterTag mc1 --namespace ${namespace.value} --name ${serviceName.value} --version ${version.value} --contentType ${contentType.value}${keyParam}
+cat ${serviceName.value}.kxc1.log >> ${serviceName.value}.log
+rm ${serviceName.value}.kxc1.log
+ls -lh
+`;
+    }
+  }, 100);
+  [
+    [5, '5 minutes'],
+    [15, '15 minutes'],
+    [30, '30 minutes'],
+    [60, '1 hours'],
+    [90, '1.5 hours'],
+    [120, '2 hours'],
+    [240, '4 hours'],
+    ['1d', 'all day'],
+  ].forEach(v => {
+    let link = document.createElement('a');
+    link.href = '#' + v[0];
+    link.innerText = 'last ' + v[1];
+    ts.appendChild(link);
+  });
+
+  window.onload = function () {
+    if (localStorage.inner_host) {
+      host.value = localStorage.inner_host;
+      [
+        ['/', 'LOGIN'],
+        ['/is/#/log-insight/tty', 'TERMINAL']
+      ].forEach(v => {
+        let link = document.createElement('a');
+        link.href = 'http://' + host.value + v[0];
+        link.innerText = v[1];
+        sidelink.appendChild(link);
+      });
+    }
+    if (['time', 'text'].includes(localStorage.timeInputType)) {
+      begin.type = localStorage.timeInputType;
+      end.type = localStorage.timeInputType;
+      tit.checked = localStorage.timeInputType === 'time';
+    }
+    updateShortcuts();
+  };
+
+  tit.onchange = function () {
+    localStorage.timeInputType = tit.checked ? 'time' : 'text';
+    begin.type = localStorage.timeInputType;
+    end.type = localStorage.timeInputType;
+  }
+
+  copy.onclick = function () {
+    cmd.select();
+    document.execCommand('copy');
+  };
+
+  function setServices(srv) {
+    let [ns, n, v] = srv.split('/');
+    namespace.value = ns;
+    serviceName.value = n;
+    version.value = v;
+  }
+
+  function loadShortcuts() {
+    try {
+      return JSON.parse(localStorage.servicesShortcuts || '[]');
+    } catch (ex) {
+      return [];
+    }
+  }
+
+  function updateShortcuts(srvs) {
+    let lis = '';
+    (srvs || loadShortcuts()).forEach(v => {
+      lis += `<li><a href="javascript:;" onclick="setServices('${v}')">${v}</a></li>`;
+    });
+    shortcuts.innerHTML = lis;
+  }
+
+  pin.onclick = function () {
+    let srv = [namespace.value, serviceName.value, version.value].join('/');
+    let srvs = loadShortcuts();
+    if (srvs.includes(srv)) return;
+    srvs.push(srv);
+    updateShortcuts(srvs);
+    localStorage.servicesShortcuts = JSON.stringify(srvs);
+  };
+</script>
+</body></html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="baidu-site-verification" content="1k9RalvJRS" />
+<title>Canvas BG</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="/static/css/base.css">
+
+<style>
+  input {
+    border: 1px solid #123;
+    margin-bottom: 10px;
+  }
+</style>
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?74766352deaef64bd5be6a9c4445da55";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</head>
+<body>
+<header></header>
+<div>
+  <input type="file" id="img1">
+  <input type="file" id="img2">
+  <input type="color" id="bg" style="height:19px">
+  <button onclick="create()">生成</button>
+  <canvas id="canvas"></canvas>
+  <img id="canvasImg">
+</div>
+<footer>kael &copy; 2014-<script>document.write((new Date).getFullYear())</script></footer>
+
+<script src="/static/script/lib/zepto.min.js"></script>
+<script src="/static/script/lib/wechat.js"></script>
+<script src="/static/script/base/tools.js"></script>
+<script src="/static/script/base/bom.js"></script>
+<script src="/static/script/base/logger.js"></script>
+
+<script>
+  canvas.width = screen.width * 2;
+  canvas.height = screen.height;
+
+  var ctx = canvas.getContext("2d");
+
+  function create() {
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    var loaded = 0;
+    var _img1 = new Image();
+    var _img2 = new Image();
+    _img1.crossOrigin = "anonymous";
+    _img2.crossOrigin = "anonymous";
+    var img_src1 = _img1.src = (img1.value.match(/\\(\w+\.\w+)$/) || [, ''])[1];
+    var img_src2 = _img2.src = (img2.value.match(/\\(\w+\.\w+)$/) || [, ''])[1];
+    _img1.onload = _img2.onload = function() {
+      ++loaded;
+      if (loaded === 2) {
+        ctx.drawImage(_img1, 0, 0, screen.width, screen.height);
+        ctx.drawImage(_img2, screen.width, 0, screen.width, screen.height);
+        var dataURL = canvas.toDataURL();
+        document.getElementById('canvasImg').src = dataURL;
+      } else if (!img_src1 || !img_src1) {
+        !img_src1 && ctx.drawImage(_img2, 0, 0, screen.width * 2, screen.height);
+        !img_src2 && ctx.drawImage(_img1, 0, 0, screen.width * 2, screen.height);
+        var dataURL = canvas.toDataURL();
+        document.getElementById('canvasImg').src = dataURL;
+      }
+    }
+  }
+</script>
+</body></html>

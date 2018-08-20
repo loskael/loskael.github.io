@@ -1,0 +1,46 @@
+<!--#insert file="../template/-intro.html" -->
+<title>gfurl</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<!--#insert file="../template/-outro.html" -->
+<style>
+  textarea {
+    display: block;
+    margin: 5vw auto;
+    padding: 1em;
+    width: 90vw;
+    height: 90vw;
+    border: 1px solid seagreen;
+  }
+
+  input[type=button] {
+    display: block;
+    margin: 0 auto 1em;
+    width: 90vw;
+    height: 15vw;
+    font-size: 5vw;
+    border: 1px solid slateblue;
+    background: linear-gradient(slateblue, #9198e5);
+    color: #fff;
+  }
+</style>
+<!--#insert file="../template/-header.html" -->
+<div>
+  <textarea name="gfurl" id="gfurl" cols="30" rows="10"></textarea>
+  <input type="button" value="OPEN" id="hehe">
+  <input type="button" value="HREF" id="qrcode">
+</div>
+<!--#insert file="../template/-footer.html" -->
+<!--#insert file="../template/-script.html" -->
+<script>
+  hehe.onclick = function () {
+    if (!gfurl.value) return alert('url is required.');
+    let uri = ["ytjapp://gf_ios?dest_url=", "gfzqapp://gf_android?dest_url="];
+    location.href = uri[/iPhone/i.test(navigator.userAgent) ? 0 : 1] + encodeURIComponent(gfurl.value);
+  };
+  gfurl.value = new URLSearchParams(location.search).get('url');
+  qrcode.onclick = function () {
+    location.href = location.origin + location.pathname + '?url=' + encodeURIComponent(gfurl.value);
+  };
+</script>
+<!--#insert file="../template/-end.html" -->

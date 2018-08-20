@@ -1,0 +1,77 @@
+<!--#insert file="../template/-intro.html" -->
+<title>Canvas Text BG</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<!--#insert file="../template/-outro.html" -->
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  input, button, textarea {
+    width: 80vw;
+    font-size: 20px;
+    padding: 3px 6px;
+    line-height: 24px;
+  }
+  input, button {
+    width: 300px;
+  }
+  #main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+<!--#insert file="../template/-header.html" -->
+<div id="main">
+  <textarea name="text" id="text"></textarea>
+  <input type="color" id="bg" value="#000000" style="height:19px" title="background color" />
+  <input type="color" id="fgs" value="#cf9f0f" style="height:19px" title="font color gradient start" />
+  <input type="color" id="fge" value="#fc980f" style="height:19px" title="font color gradient end" />
+  <input type="text"  id="ctxFont" value="italic small-caps 100 52px Georgia" placeholder="canvas font" />
+  <input type="text"  id="ctxWidth" value="800" placeholder="canvas width" />
+  <input type="text"  id="ctxHeight" value="600" placeholder="canvas height" />
+  <button onclick="create()">生成</button>
+  <canvas id="canvas"></canvas>
+  <img id="canvas_img">
+</div>
+<!--#insert file="../template/-footer.html" -->
+<!--#insert file="../template/-script.html" -->
+<script>
+  canvas.width = Number(ctxWidth.value || screen.width);
+  canvas.height = Number(ctxHeight.value || screen.height);
+  var ctx = canvas.getContext("2d");
+  text.value = localStorage.canvas_text || '';
+  function create() {
+    if (!text.value) alert('textarea null.');
+    localStorage.canvas_text = text.value;
+
+    // set background
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // set text
+    let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, fgs.value);
+    gradient.addColorStop(1, fge.value);
+    ctx.fillStyle = gradient;
+
+    ctx.font = ctxFont.value || "normal small-caps 100 52px STKaiti";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 10;
+    ctx.shadowBlur = 5;
+
+    ctx.textAlign = "right";
+    text.value.split('\n').forEach((v, i) => {
+      ctx.fillText(v, screen.width - 160, screen.height - 240 + i * 80);
+    });
+
+    ctx.restore();
+    var dataURL = canvas.toDataURL();
+    document.getElementById("canvas_img").src = dataURL;
+  }
+</script>
+<!--#insert file="../template/-end.html" -->

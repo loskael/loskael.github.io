@@ -1,0 +1,32 @@
+<!--#insert file="../template/-intro.html" -->
+<title>Storage</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<!--#insert file="../template/-outro.html" -->
+<!--#insert file="../template/-header.html" -->
+<div id="main">
+	<span id="view">0</span>
+	<button onclick="plusplus()">+1</button>
+
+  <script>
+    view.innerText = (parseInt(localStorage.plusplus, 10) || 0);
+
+    function plusplus(){
+      var val = (parseInt(localStorage.plusplus, 10) || 0) + 1;
+      localStorage.plusplus = val;
+      view.innerText = val;
+      console.log('plusplus: ', val);
+    }
+
+    window.addEventListener("storage", function(store) {
+      console.log('store: ', store);
+      if (store.storageArea === localStorage && "plusplus" === store.key) {
+        view.innerText = store.newValue;
+      }
+    });
+  </script>
+
+</div>
+<!--#insert file="../template/-footer.html" -->
+<!--#insert file="../template/-script.html" -->
+<!--#insert file="../template/-end.html" -->

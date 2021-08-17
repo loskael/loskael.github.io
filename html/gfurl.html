@@ -64,5 +64,6 @@
     let uri = ["ytjapp://gf_ios?dest_url=", "gfzqapp://gf_android?dest_url="];
     location.href = uri[/iPhone/i.test(navigator.userAgent) ? 0 : 1] + encodeURIComponent(gfurl.value);
   };
+  gfurl.value = new URLSearchParams(location.search).get('url');
 </script>
 </body></html>

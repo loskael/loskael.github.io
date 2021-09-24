@@ -52,73 +52,114 @@
   #copy {
     width: 80px;
   }
+
+  fieldset {
+    width: 720px;
+    margin: 0 0 1em 1em;
+  }
+
+  legend {
+    margin-left: 1em;
+    padding: 0 8px;
+  }
 </style>
 <!--#insert file="../template/-header.html" -->
+<fieldset>
+  <legend>Host</legend>
 
-<div class="line">
-  <label for="host">Host</label>
-  <input type="text" name="host" id="host">
-</div>
+  <div class="line">
+    <label for="host">Host</label>
+    <input type="text" name="host" id="host">
+  </div>
 
-<div class="line">
-  <label for="date">Date</label>
-  <input type="date" name="date" id="date">
-</div>
+</fieldset>
 
-<div class="line">
-  <label for="begin">Begin</label>
-  <input type="text" name="begin" id="begin">
-</div>
+<fieldset>
+  <legend>Date time</legend>
 
-<div class="line">
-  <label for="end">End</label>
-  <input type="text" name="end" id="end">
-</div>
+  <div class="line">
+    <label for="date">Date</label>
+    <input type="date" name="date" id="date">
+  </div>
 
-<div class="line">
-  <label for="cluster">Cluster</label>
-  <select name="cluster" id="cluster">
-    <option value="">select cluster</option>
-    <option value="mc1">mc1</option>
-    <option value="kxc1">kxc1</option>
-    <option value="mcuat">mcuat</option>
-    <option value="cs1">cs1</option>
-    <option value="cs2">cs2</option>
-    <option value="cs3">cs3</option>
-    <option value="cs4">cs4</option>
-    <option value="cs5">cs5</option>
-    <option value="cs8">cs8</option>
-  </select>
-</div>
+  <div class="line">
+    <label for="tit">type=time</label>
+    <input type="checkbox" name="tit" id="tit" style="width:unset">
+  </div>
 
-<div class="line">
-  <label for="namespace">Namespace</label>
-  <input type="text" name="namespace" id="namespace" value="gfstore">
-</div>
+  <div class="line">
+    <label for="begin">Begin</label>
+    <input type="text" name="begin" id="begin">
+  </div>
 
-<div class="line">
-  <label for="serviceName">Name</label>
-  <input type="text" name="name" id="serviceName" value="super">
-</div>
+  <div class="line">
+    <label for="end">End</label>
+    <input type="text" name="end" id="end">
+  </div>
 
-<div class="line">
-  <label for="version">Version</label>
-  <input type="text" name="version" id="version" value="1.0.0">
-</div>
+</fieldset>
 
-<div class="line">
-  <label for="version">Content Type</label>
-  <select name="contentType" id="contentType">
-    <option value="0">json</option>
-    <option value="1">encoding</option>
-    <option value="2" selected>raw</option>
-  </select>
-</div>
+<fieldset>
+  <legend>Service info</legend>
 
-<div class="line">
-  <label for="keyword">keyword</label>
-  <input type="text" name="keyword" id="keyword" value="">
-</div>
+  <div class="line">
+    <label for="cluster">Cluster</label>
+    <select name="cluster" id="cluster">
+      <option value="">select cluster</option>
+      <option value="mc1">mc1</option>
+      <option value="kxc1">kxc1</option>
+      <option value="mcuat">mcuat</option>
+      <option value="cs1">cs1</option>
+      <option value="cs2">cs2</option>
+      <option value="cs3">cs3</option>
+      <option value="cs4">cs4</option>
+      <option value="cs5">cs5</option>
+      <option value="cs8">cs8</option>
+    </select>
+  </div>
+
+  <ol id="shortcuts" style="margin-left:146px"></ol>
+
+  <div class="line">
+    <label for="namespace">Namespace</label>
+    <input type="text" name="namespace" id="namespace" value="gfstore">
+  </div>
+
+  <div class="line">
+    <label for="serviceName">Name</label>
+    <input type="text" name="name" id="serviceName" value="super">
+  </div>
+
+  <div class="line">
+    <label for="version">Version</label>
+    <input type="text" name="version" id="version" value="1.0.0">
+  </div>
+
+  <div class="line">
+    <label for="pin" onclick="alert('You don\'t really need it')">Remove ?</label>
+    <input type="button" id="pin" value="Add shortcut">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Others</legend>
+
+  <div class="line">
+    <label for="version">Content Type</label>
+    <select name="contentType" id="contentType">
+      <option value="0">json</option>
+      <option value="1">encoding</option>
+      <option value="2" selected>raw</option>
+    </select>
+  </div>
+
+  <div class="line">
+    <label for="keyword">keyword</label>
+    <input type="text" name="keyword" id="keyword" value="">
+  </div>
+
+</fieldset>
 
 <div class="line">
   <input type="button" id="copy" value="copy">
@@ -129,11 +170,6 @@
 </div>
 
 <div class="ts" id="ts"></div>
-
-<div class="line">
-  <label for="tit">type=time</label>
-  <input type="checkbox" name="tit" id="tit">
-</div>
 
 <div class="side-link" id="sidelink"></div>
 
@@ -216,6 +252,7 @@ ls -lh
       end.type = localStorage.timeInputType;
       tit.checked = localStorage.timeInputType === 'time';
     }
+    updateShortcuts();
   };
 
   tit.onchange = function () {
@@ -227,6 +264,38 @@ ls -lh
   copy.onclick = function () {
     cmd.select();
     document.execCommand('copy');
+  };
+
+  function setServices(srv) {
+    let [ns, n, v] = srv.split('/');
+    namespace.value = ns;
+    serviceName.value = n;
+    version.value = v;
+  }
+
+  function loadShortcuts() {
+    try {
+      return JSON.parse(localStorage.servicesShortcuts || '[]');
+    } catch (ex) {
+      return [];
+    }
+  }
+
+  function updateShortcuts(srvs) {
+    let lis = '';
+    (srvs || loadShortcuts()).forEach(v => {
+      lis += `<li><a href="javascript:;" onclick="setServices('${v}')">${v}</a></li>`;
+    });
+    shortcuts.innerHTML = lis;
+  }
+
+  pin.onclick = function () {
+    let srv = [namespace.value, serviceName.value, version.value].join('/');
+    let srvs = loadShortcuts();
+    if (srvs.includes(srv)) return;
+    srvs.push(srv);
+    updateShortcuts(srvs);
+    localStorage.servicesShortcuts = JSON.stringify(srvs);
   };
 </script>
 <!--#insert file="../template/-end.html" -->

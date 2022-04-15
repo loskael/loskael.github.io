@@ -28,6 +28,7 @@
 <div>
   <textarea name="gfurl" id="gfurl" cols="30" rows="10"></textarea>
   <input type="button" value="OPEN" id="hehe">
+  <input type="button" value="HREF" id="qrcode">
 </div>
 <!--#insert file="../template/-footer.html" -->
 <!--#insert file="../template/-script.html" -->
@@ -38,5 +39,8 @@
     location.href = uri[/iPhone/i.test(navigator.userAgent) ? 0 : 1] + encodeURIComponent(gfurl.value);
   };
   gfurl.value = new URLSearchParams(location.search).get('url');
+  qrcode.onclick = function () {
+    location.href = location.origin + location.pathname + '?' + encodeURIComponent(gfurl.value);
+  };
 </script>
 <!--#insert file="../template/-end.html" -->

@@ -61,7 +61,7 @@
 <div id="view">
 </div>
 <div class="op">
-  <input id="timer" placeholder="300" value="300">
+  <input id="timer" placeholder="10" value="10">
   <button id="btn">暂停</button>
 </div>
 <script>
@@ -69,29 +69,36 @@
   const COUNTS = 100;
 
   let counts = COUNTS;
-  let timeout = 300;
+  let timeout = 10;
   let status = '';
-  let debt = location.hash.indexOf('debt') !== -1;
+  let debt = location.hash.includes('debt');
+  let sortByValue = location.hash.includes('sort');
 
-  while (counts--) list.push(COUNTS);
+  while (counts--) list.push({
+    color: (~~(Math.random()*(1<<24))).toString(16),
+    value: 100,
+  });
 
   let render_lock = false;
-  const render = (list) => {
+  const render = (data) => {
     if (render_lock) return;
     render_lock = true;
     setTimeout(() => {
       render_lock = false;
     }, Math.max(100, timeout));
-    list = list.slice(0).sort((x, y) => x - y);
+    let list = data.slice(0);
+    if (sortByValue) {
+       list = list.sort((x, y) => x.value - y.value);
+    }
     let html = '';
     let index = 0;
     while (list.length) {
       let item = list.shift();
       let position = '';
-      if (item < 0) {
-        position = `margin-bottom:${item - 1}px;`
+      if (item.value < 0) {
+        position = `margin-bottom:${item.value - 1}px;`
       }
-      html += `<span style="left:${13 * index}px;height:${Math.abs(item)}px;${position}"></span>`;
+      html += `<span style="background:#${item.color};left:${13 * index}px;height:${Math.abs(item.value)}px;${position}"></span>`;
       index++;
     }
     view.innerHTML = html;
@@ -107,11 +114,11 @@
 
   const run = () => {
     if (status === 'pause') return;
-    list.forEach((value, index) => {
-      if (!debt && value <= 0) return;
+    list.forEach((item, index) => {
+      if (!debt && item.value <= 0) return;
       let rid = random(index);
-      list[rid] = list[rid] + 1;
-      list[index] = list[index] - 1;
+      list[rid].value = list[rid].value + 1;
+      list[index].value = list[index].value - 1;
     });
     render(list);
     setTimeout(run, timeout);

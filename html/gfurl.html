@@ -25,7 +25,7 @@
 
   input[type=button] {
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 1em;
     width: 90vw;
     height: 15vw;
     font-size: 5vw;
@@ -67,7 +67,7 @@
   };
   gfurl.value = new URLSearchParams(location.search).get('url');
   qrcode.onclick = function () {
-    location.href = location.origin + location.pathname + '?' + encodeURIComponent(gfurl.value);
+    location.href = location.origin + location.pathname + '?url=' + encodeURIComponent(gfurl.value);
   };
 </script>
 </body></html>

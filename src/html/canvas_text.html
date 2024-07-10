@@ -18,10 +18,14 @@
   input, button {
     width: 300px;
   }
+  textarea {
+    height: 300px;
+  }
   #main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
 </style>
 <!--#insert file="../template/-header.html" -->
@@ -40,13 +44,15 @@
 <!--#insert file="../template/-footer.html" -->
 <!--#insert file="../template/-script.html" -->
 <script>
-  canvas.width = Number(ctxWidth.value || screen.width);
-  canvas.height = Number(ctxHeight.value || screen.height);
   var ctx = canvas.getContext("2d");
   text.value = localStorage.canvas_text || '';
   function create() {
     if (!text.value) alert('textarea null.');
     localStorage.canvas_text = text.value;
+
+    // set canvas width & height
+    let cWidth = canvas.width = Number(ctxWidth.value || screen.width);
+    let cHeight = canvas.height = Number(ctxHeight.value || screen.height);
 
     // set background
     ctx.fillStyle = bg.value;
@@ -66,7 +72,7 @@
 
     ctx.textAlign = "right";
     text.value.split('\n').forEach((v, i) => {
-      ctx.fillText(v, screen.width - 160, screen.height - 240 + i * 80);
+      ctx.fillText(v, cWidth - 160, cHeight - 240 + i * 80);
     });
 
     ctx.restore();

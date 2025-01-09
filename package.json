@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "cheerio": "^0.22.0",
-    "gulp": "^3.9.1",
+    "gulp": "^5.0.0",
     "gulp-clean-css": "^2.0.10",
     "gulp-htmlincluder": "^0.1.0",
     "gulp-minify-html": "^1.0.6",
-    "gulp-uglify": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
     "needle": "^1.4.1"
   },
   "overrides": {

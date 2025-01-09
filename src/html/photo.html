@@ -1,0 +1,105 @@
+<!--#insert file="../template/-intro.html" -->
+<title>Photo</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<!--#insert file="../template/-outro.html" -->
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 100vw;
+    height: 100vh;
+    padding-top: 5vh;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    backdrop-filter: blur(100px);
+    user-select: none;
+  }
+
+  #opts {
+    position: fixed;
+    left: 0;
+    top: 12px;
+    width: 100vw;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #opts textarea {
+    height: 44px;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 4px 6px;
+  }
+
+  #photo {
+    width: auto;
+    height: 80vh;
+    margin: 0 auto;
+    display: block;
+    border-radius: 4vh;
+  }
+
+  #photomark {
+    position: fixed;
+    left: 50%;
+    top: 88vh;
+    font: italic 3vh/1.5 Georgia;
+    color: #eee;
+    text-align: center;
+    transform: translate(-50%);
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .fullscreen #opts,
+  .fullscreen footer {
+    display: none;
+  }
+</style>
+<!--#insert file="../template/-header.html" -->
+<div id="opts">
+  <textarea type="text" id="desc1" placeholder="图片描述" onchange="photomark.innerText = this.value.trim()"></textarea>
+  <input type="file" id="file1" onchange="create(event)">
+</div>
+<img id="photo" ondblclick="toggleOpts()">
+<div id="photomark"></div>
+<!--#insert file="../template/-footer.html" -->
+<!--#insert file="../template/-script.html" -->
+<script>
+  function readAsDataURL(event, cb) {
+    // 检验是否为图像文件
+    var file = event.target.files[0];
+    if (!/image\/\w+/.test(file.type)) {
+      alert("看清楚，这个需要图片！");
+      return false;
+    }
+    var reader = new FileReader();
+    // 将文件以Data URL形式读入页面
+    reader.readAsDataURL(file);
+    reader.onload = cb;
+  }
+
+  function create(event) {
+    readAsDataURL(event, (file) => {
+      const dataURL = file.target.result;
+      document.body.style.backgroundImage = `url(${dataURL})`;
+      photo.src = dataURL;
+      photomark.innerText = desc1.value.trim();
+      document.body.classList.add('fullscreen');
+    });
+  }
+
+  function toggleOpts() {
+    document.body.classList.toggle('fullscreen');
+  }
+</script>
+<!--#insert file="../template/-end.html" -->

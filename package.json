@@ -9,7 +9,7 @@
     "postbuild": "mv html/index.html index.html && node tools/index.js"
   },
   "dependencies": {
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.10",
     "gulp-htmlincluder": "^0.1.0",

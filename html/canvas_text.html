@@ -5,9 +5,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <meta name="baidu-site-verification" content="1k9RalvJRS" />
+
 <title>Canvas Text BG</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -19,23 +20,55 @@
     padding: 0;
     box-sizing: border-box;
   }
-  input, button, textarea {
+
+  input,
+  button,
+  textarea {
     width: 80vw;
     font-size: 20px;
     padding: 3px 6px;
     line-height: 24px;
   }
-  input, button {
+
+  input {
+    width: auto;
+  }
+
+  input[type=color] {
+    width: 40px;
+  }
+
+  button,
+  input[type=text] {
     width: 300px;
   }
+
   textarea {
     height: 300px;
   }
+
+  fieldset {
+    padding: .5em 1em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  fieldset label {
+    margin-left: -6px;
+  }
+
   #main {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+  }
+
+  .line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 </style>
 <script>
@@ -51,13 +84,42 @@
 <body>
 <header></header>
 <div id="main">
-  <textarea name="text" id="text"></textarea>
-  <input type="color" id="bg" value="#000000" style="height:19px" title="background color" />
-  <input type="color" id="fgs" value="#cf9f0f" style="height:19px" title="font color gradient start" />
-  <input type="color" id="fge" value="#fc980f" style="height:19px" title="font color gradient end" />
-  <input type="text"  id="ctxFont" value="italic small-caps 100 52px Georgia" placeholder="canvas font" />
-  <input type="text"  id="ctxWidth" value="800" placeholder="canvas width" />
-  <input type="text"  id="ctxHeight" value="600" placeholder="canvas height" />
+  <div class="line">
+    <textarea name="text" id="text"></textarea>
+  </div>
+  <div class="line">
+    <label for="bg">背景色</label>
+    <input type="color" id="bg" value="#000000" style="height:19px" title="background color" />
+  </div>
+  <div class="line">
+    <label for="fg">文本渐变</label>
+    <input type="color" id="fgs" value="#cf9f0f" style="height:19px" title="font color gradient start" />
+    <input type="color" id="fge" value="#fc980f" style="height:19px" title="font color gradient end" />
+  </div>
+  <fieldset>
+    <legend>对齐方式</legend>
+    <input type="radio" name="align" id="align-left" value="left">
+    <label for="align-left">左对齐</label>
+    <input type="radio" name="align" id="align-cenger" value="center" checked>
+    <label for="align-center">居中对齐</label>
+    <input type="radio" name="align" id="align-right" value="right">
+    <label for="align-right">右对齐</label>
+  </fieldset>
+  <div class="line">
+    <label for="ctxFont">文本字体</label>
+    <input type="text" id="ctxFont" value="italic small-caps 52px Georgia" placeholder="canvas font" />
+    <input type="text" id="ctxFontHeight" value="52" placeholder="line height" />
+  </div>
+  <div class="line">
+    <label for="ctx">画布大小</label>
+    <input type="text" id="ctxWidth" value="800" placeholder="canvas width" />
+    <input type="text" id="ctxHeight" value="600" placeholder="canvas height" />
+  </div>
+  <div class="line">
+    <label for="ctx">文本偏移</label>
+    <input type="text" id="offsetX" value="400" placeholder="offset x" />
+    <input type="text" id="offsetY" value="300" placeholder="offset y" />
+  </div>
   <button onclick="create()">生成</button>
   <canvas id="canvas"></canvas>
   <img id="canvas_img">
@@ -85,21 +147,40 @@
     ctx.fillStyle = bg.value;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    if (location.hash.includes('debug')) {
+      // set grid
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      (new Array(10)).fill(0).map((v, i) => i * 0.1).forEach(v => {
+        ctx.moveTo(cWidth * v, 0);
+        ctx.lineTo(cWidth * v, cHeight);
+        ctx.moveTo(0, cHeight * v);
+        ctx.lineTo(cWidth, cHeight * v);
+      });
+      ctx.stroke();
+    }
+
     // set text
     let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
     gradient.addColorStop(0, fgs.value);
     gradient.addColorStop(1, fge.value);
     ctx.fillStyle = gradient;
 
-    ctx.font = ctxFont.value || "normal small-caps 100 52px STKaiti";
+    ctx.font = ctxFont.value;
     ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
     ctx.shadowOffsetX = 10;
     ctx.shadowOffsetY = 10;
     ctx.shadowBlur = 5;
 
-    ctx.textAlign = "right";
+    ctx.textAlign = document.querySelector('[name=align]:checked')?.value || "center";
+    const offset = {
+      x: offsetX.value * 1,
+      y: offsetY.value * 1,
+    };
+    const lineHeight = ctxFontHeight.value * 1;
     text.value.split('\n').forEach((v, i) => {
-      ctx.fillText(v, cWidth - 160, cHeight - 240 + i * 80);
+      ctx.fillText(v, cWidth - offset.x, cHeight - offset.y + i * lineHeight);
     });
 
     ctx.restore();

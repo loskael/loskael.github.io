@@ -1,1 +1,1 @@
-const last=data[data.length-2].toString(16).replace(/^([0-f])$/i,"0")+data[data.length-1].toString(16).replace(/^([0-f])$/i,"0"),JPEG=(lasts[last]>>0)+1==="ffd9";
+const last=data[data.length-2].toString(16).replace(/^([0-f])$/i,"0")+data[data.length-1].toString(16).replace(/^([0-f])$/i,"0"),JPEG=1+(lasts[last]>>0)==="ffd9";

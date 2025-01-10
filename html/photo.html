@@ -23,22 +23,30 @@
     width: 100vw;
     height: 100vh;
     padding-top: 5vh;
+    background-position: center;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: cover;
     backdrop-filter: blur(100px);
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vh;
   }
 
   #opts {
     position: fixed;
     left: 0;
-    top: 12px;
+    top: 0;
     width: 100vw;
     height: 100px;
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 12px;
+    border: 1px solid #999;
+    justify-content: center;
+    padding: 0 12px;
   }
 
   #opts textarea {
@@ -48,31 +56,29 @@
     padding: 4px 6px;
   }
 
+  #opts input {
+    max-width: 60vmin;
+  }
+
   #photo {
-    width: auto;
-    height: 80vh;
-    margin: 0 auto;
-    display: block;
-    border-radius: 4vh;
+    max-width: 80vmin;
+    max-height: 80vmin;
+    border-radius: 4vmin;
   }
 
   #photomark {
-    position: fixed;
-    left: 50%;
-    top: 88vh;
-    font: italic 3vh/1.5 Georgia;
-    color: #eee;
+    font: italic 3vmin/1.5 Georgia;
     text-align: center;
-    transform: translate(-50%);
-    text-overflow: ellipsis;
+    color: #eee;
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
     -webkit-line-clamp: 2;
     overflow: hidden;
   }
 
-  .fullscreen #opts,
-  .fullscreen footer {
+  footer,
+  .fullscreen #opts {
     display: none;
   }
 </style>

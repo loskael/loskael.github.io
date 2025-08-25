@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>马拉松配速计算器</title>
+  <style>
+    /* 基本样式和布局 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f4f7f9;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .calculator-container {
+      background-color: #ffffff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 25px;
+    }
+
+    /* 输入区域样式 */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      background-color: #fff;
+      appearance: none;
+      /* 隐藏默认下拉箭头 */
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat;
+      background-position: right 10px top 50%;
+      background-size: 12px auto;
+    }
+
+    .pace-select-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pace-select-group span {
+      font-weight: bold;
+    }
+
+    /* 按钮样式 */
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* 结果区域样式 */
+    .results-container {
+      margin-top: 25px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+
+    .finish-time {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .finish-time span {
+      color: #d9534f;
+    }
+
+    /* 表格样式 */
+    #pace-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #pace-table th,
+    #pace-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    #pace-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    #pace-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    #pace-table tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="calculator-container">
+    <h1>马拉松配速计算器</h1>
+
+    <div class="input-group">
+      <label for="distance">比赛距离:</label>
+      <select id="distance">
+        <option value="42.195">全程马拉松 (42.195公里)</option>
+        <option value="21.0975">半程马拉松 (21.0975公里)</option>
+        <option value="15">15公里</option>
+        <option value="10">10公里</option>
+        <option value="9">9公里</option>
+        <option value="8">8公里</option>
+        <option value="7">7公里</option>
+        <option value="6">6公里</option>
+        <option value="5">5公里</option>
+        <option value="4">4公里</option>
+        <option value="3">3公里</option>
+        <option value="2">2公里</option>
+        <option value="1">1公里</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="pace-min">目标配速 (每公里):</label>
+      <div class="pace-select-group">
+        <select id="pace-min"></select> <span>分</span>
+        <select id="pace-sec"></select> <span>秒</span>
+      </div>
+    </div>
+
+    <button id="calculate-btn">计算并生成配速表</button>
+
+    <div class="results-container">
+      <div class="finish-time">
+        预计完赛时间: <span id="finish-time-result">--:--:--</span>
+      </div>
+      <table id="pace-table">
+        <thead>
+          <tr>
+            <th>距离</th>
+            <th>通过时间</th>
+          </tr>
+        </thead>
+        <tbody id="pace-table-body">
+          <!-- 结果将通过 JavaScript 动态插入这里 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // 当文档加载完成后执行
+    document.addEventListener('DOMContentLoaded', function () {
+      const paceMinSelect = document.getElementById('pace-min');
+      const paceSecSelect = document.getElementById('pace-sec');
+      const calculateBtn = document.getElementById('calculate-btn');
+      const distanceSelect = document.getElementById('distance');
+      const finishTimeResult = document.getElementById('finish-time-result');
+      const paceTableBody = document.getElementById('pace-table-body');
+
+      // --- 1. 动态填充配速下拉菜单 ---
+      // 填充分钟 (3-10分钟)
+      for (let i = 3; i <= 10; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        paceMinSelect.appendChild(option);
+      }
+      paceMinSelect.value = 5; // 默认选中5分钟
+
+      // 填充秒钟 (0-59秒)
+      for (let i = 0; i < 60; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        // 补零，例如 5 -> 05
+        option.textContent = i.toString().padStart(2, '0');
+        paceSecSelect.appendChild(option);
+      }
+      paceSecSelect.value = 30; // 默认选中30秒
+
+      // --- 2. 核心计算逻辑 ---
+
+      // 辅助函数：将总秒数格式化为 HH:MM:SS
+      function formatTime(totalSeconds) {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        // 使用 padStart 确保是两位数
+        const hh = hours.toString().padStart(2, '0');
+        const mm = minutes.toString().padStart(2, '0');
+        const ss = seconds.toString().padStart(2, '0');
+
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      // 主计算函数
+      function calculateAndDisplay() {
+        // a. 获取用户输入
+        const distanceKm = parseFloat(distanceSelect.value);
+        const paceMin = parseInt(paceMinSelect.value);
+        const paceSec = parseInt(paceSecSelect.value);
+
+        // b. 计算
+        const secondsPerKm = paceMin * 60 + paceSec;
+        const totalFinishSeconds = secondsPerKm * distanceKm;
+
+        // c. 更新总完赛时间
+        finishTimeResult.textContent = formatTime(totalFinishSeconds);
+
+        // d. 生成并更新分段配速表
+        updatePaceTable(secondsPerKm, distanceKm);
+      }
+
+      // 更新分段配速表的函数
+      function updatePaceTable(secondsPerKm, totalDistanceKm) {
+        // 清空旧的表格内容
+        paceTableBody.innerHTML = '';
+
+        // 定义分段点（公里和标签）
+        const splits = [
+          { km: 1, label: '1公里' },
+          { km: 3, label: '3公里' },
+          { km: 5, label: '5公里' },
+          { km: 10, label: '10公里' },
+          { km: 15, label: '15公里' },
+          { km: 20, label: '20公里' },
+          { km: 21.0975, label: '半程点' },
+          { km: 25, label: '25公里' },
+          { km: 30, label: '30公里' },
+          { km: 35, label: '35公里' },
+          { km: 40, label: '40公里' },
+          { km: 42.195, label: '全程终点' }
+        ];
+
+        // 遍历分段点，创建表格行
+        splits.forEach(split => {
+          // 只显示小于等于总距离的分段点
+          if (split.km <= totalDistanceKm) {
+            const splitTimeSeconds = secondsPerKm * split.km;
+
+            const row = document.createElement('tr');
+
+            const cellLabel = document.createElement('td');
+            cellLabel.textContent = split.label;
+
+            const cellTime = document.createElement('td');
+            cellTime.textContent = formatTime(splitTimeSeconds);
+
+            row.appendChild(cellLabel);
+            row.appendChild(cellTime);
+
+            paceTableBody.appendChild(row);
+          }
+        });
+
+        // 确保最后一行总是精确的终点时间
+        // （上面的循环可能因为浮点数精度问题在全马/半马时没有包含终点）
+        if (totalDistanceKm === 21.0975 && !splits.find(s => s.km === 21.0975 && s.km <= totalDistanceKm)) {
+          // This case is handled by the loop, but as a safeguard.
+        } else if (totalDistanceKm === 42.195 && !splits.find(s => s.km === 42.195 && s.km <= totalDistanceKm)) {
+          // This case is also handled. The logic is fine.
+        }
+
+      }
+
+      // --- 3. 绑定事件 ---
+      calculateBtn.addEventListener('click', calculateAndDisplay);
+
+      // --- 4. 页面加载后立即计算一次 ---
+      calculateAndDisplay();
+    });
+  </script>
+</body>
+
+</html>

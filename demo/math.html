@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数学练习题生成器</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background-color: #f4f7f9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 25px;
+    }
+
+    .controls label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .controls input[type="number"],
+    .controls select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .operator-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .operator-group label {
+      font-weight: normal;
+    }
+
+    .print-cols-group {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .print-cols-group label {
+      margin-bottom: 0;
+      font-weight: normal;
+    }
+
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    #generateBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #generateBtn:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+
+    #printBtn {
+      background-color: #008CBA;
+      color: white;
+    }
+
+    #printBtn:hover {
+      background-color: #007bb5;
+      transform: translateY(-2px);
+    }
+
+    #exercises {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .exercise-item {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      border-radius: 6px;
+      background-color: #fefefe;
+      font-size: 1.2em;
+      /* 使用等宽字体确保对齐 */
+      font-family: monospace;
+      white-space: pre;
+      /* 保留空格 */
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+
+      .container {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .controls,
+      .buttons {
+        display: none;
+      }
+
+      .exercise-item {
+        border: none;
+      }
+
+      #exercises {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>练习题</h1>
+
+    <div class="controls">
+      <div>
+        <label for="minNum">最小数字:</label>
+        <input type="number" id="minNum" value="10" min="0">
+      </div>
+      <div>
+        <label for="maxNum">最大数字:</label>
+        <input type="number" id="maxNum" value="10000" min="1">
+      </div>
+      <div>
+        <label for="count">题目数量:</label>
+        <input type="number" id="count" value="54" min="1">
+      </div>
+      <div>
+        <label>列数:</label>
+        <div class="print-cols-group">
+          <label><input type="radio" name="printCols" value="2"> 2列</label>
+          <label><input type="radio" name="printCols" value="3" checked> 3列</label>
+          <label><input type="radio" name="printCols" value="4"> 4列</label>
+        </div>
+      </div>
+      <div>
+        <label>选择运算符:</label>
+        <div class="operator-group">
+          <label><input type="checkbox" name="operator" value="+" checked> + </label>
+          <label><input type="checkbox" name="operator" value="-" checked> - </label>
+          <label><input type="checkbox" name="operator" value="*" disabled> × </label>
+          <label><input type="checkbox" name="operator" value="/" disabled> ÷ </label>
+        </div>
+      </div>
+      <div>
+        <label><input type="checkbox" id="mixedOps" disabled> 混合运算 (两个运算符)</label>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="generateBtn">生成题目</button>
+      <button id="printBtn">打印页面</button>
+    </div>
+
+    <div id="exercises"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const minNumInput = document.getElementById('minNum');
+      const maxNumInput = document.getElementById('maxNum');
+      const countInput = document.getElementById('count');
+      const operatorCheckboxes = document.querySelectorAll('input[name="operator"]');
+      const mixedOpsCheckbox = document.getElementById('mixedOps');
+      const printColsRadios = document.querySelectorAll('input[name="printCols"]');
+      const generateBtn = document.getElementById('generateBtn');
+      const printBtn = document.getElementById('printBtn');
+      const exercisesDiv = document.getElementById('exercises');
+
+      const opMap = {
+        '+': ' + ',
+        '-': ' - ',
+        '*': ' × ',
+        '/': ' ÷ '
+      };
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // 检查运算结果是否有效
+      function isValidResult(result, min, max) {
+        // 如果结果是小数，也视为无效，除非是除法
+        return result >= min && result <= max && Number.isInteger(result);
+      }
+
+      // 确保能整除
+      function generateDivisible(min, max) {
+        let dividend, divisor;
+        let result;
+        do {
+          divisor = getRandomInt(min, max);
+          if (divisor === 0) divisor = 1;
+          result = getRandomInt(min, Math.floor(max / divisor));
+          if (result === 0) result = 1; // 避免0结果
+          dividend = divisor * result;
+        } while (dividend > max || dividend < min);
+        return [dividend, divisor];
+      }
+
+      function generateExercise(min, max, ops, isMixed) {
+        let expression = "";
+        if (isMixed && ops.length >= 2) {
+          let op1 = ops[getRandomInt(0, ops.length - 1)];
+          let op2 = ops[getRandomInt(0, ops.length - 1)];
+
+          let num1, num2, num3;
+          let result1;
+
+          // 优先考虑乘除，确保运算正确
+          if ((op1 === '+' || op1 === '-') && (op2 === '*' || op2 === '/')) {
+            // a + (b * c) 或 a - (b / c)
+            if (op2 === '*') {
+              num2 = getRandomInt(min, max);
+              num3 = getRandomInt(min, max);
+              result1 = num2 * num3;
+            } else { // op2 === '/'
+              [num2, num3] = generateDivisible(min, max);
+              result1 = num2 / num3;
+            }
+
+            if (!isValidResult(result1, min, max)) return null;
+
+            do {
+              num1 = getRandomInt(min, max);
+              let finalResult;
+              if (op1 === '+') {
+                finalResult = num1 + result1;
+              } else { // op1 === '-'
+                if (num1 < result1) [num1, result1] = [result1, num1];
+                finalResult = num1 - result1;
+              }
+              if (isValidResult(finalResult, min, max)) {
+                return `${num1}${opMap[op1]}${num2}${opMap[op2]}${num3}`;
+              }
+            } while (true);
+
+          } else {
+            // a + b - c 或 a * b / c
+            do {
+              num1 = getRandomInt(min, max);
+              num2 = getRandomInt(min, max);
+
+              if (op1 === '+') {
+                result1 = num1 + num2;
+              } else if (op1 === '-') {
+                if (num1 < num2) [num1, num2] = [num2, num1];
+                result1 = num1 - num2;
+              } else if (op1 === '*') {
+                result1 = num1 * num2;
+              } else { // op1 === '/'
+                [num1, num2] = generateDivisible(min, max);
+                result1 = num1 / num2;
+              }
+
+              if (!isValidResult(result1, min, max)) continue;
+
+              num3 = getRandomInt(min, max);
+
+              let finalResult;
+              if (op2 === '+') {
+                finalResult = result1 + num3;
+              } else if (op2 === '-') {
+                if (result1 < num3) continue;
+                finalResult = result1 - num3;
+              } else if (op2 === '*') {
+                finalResult = result1 * num3;
+              } else { // op2 === '/'
+                if (result1 % num3 !== 0) continue;
+                finalResult = result1 / num3;
+              }
+              if (isValidResult(finalResult, min, max)) {
+                return `${num1}${opMap[op1]}${num2}${opMap[op2]}${num3}`;
+              }
+            } while (true);
+          }
+        } else {
+          // 单步运算
+          const op = ops[getRandomInt(0, ops.length - 1)];
+          let num1, num2;
+          if (op === '-') {
+            num1 = getRandomInt(min, max);
+            num2 = getRandomInt(min, num1);
+          } else if (op === '/') {
+            [num1, num2] = generateDivisible(min, max);
+          } else { // +, *
+            num1 = getRandomInt(min, max);
+            num2 = getRandomInt(min, max);
+          }
+          expression = `${num1}${opMap[op]}${num2}`;
+          return expression;
+        }
+      }
+
+      function generateExercises() {
+        exercisesDiv.innerHTML = '';
+        const minNum = parseInt(minNumInput.value, 10);
+        const maxNum = parseInt(maxNumInput.value, 10);
+        const count = parseInt(countInput.value, 10);
+        const selectedOps = Array.from(operatorCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
+        const isMixed = mixedOpsCheckbox.checked;
+
+        if (selectedOps.length === 0) {
+          alert('请至少选择一个运算符！');
+          return;
+        }
+        if (isMixed && selectedOps.length < 2) {
+          alert('要使用混合运算，请至少选择两个运算符！');
+          return;
+        }
+        if (minNum >= maxNum) {
+          alert('最大数字必须大于最小数字！');
+          return;
+        }
+
+        let expressions = [];
+        let maxLength = 0;
+        for (let i = 0; i < count; i++) {
+          let tempExp;
+          do {
+            tempExp = generateExercise(minNum, maxNum, selectedOps, isMixed);
+          } while (tempExp === null);
+          expressions.push(tempExp);
+          if (tempExp.length > maxLength) {
+            maxLength = tempExp.length;
+          }
+        }
+
+        expressions.forEach(exerciseText => {
+          const item = document.createElement('div');
+          item.className = 'exercise-item';
+          const paddedText = exerciseText.padEnd(maxLength, ' ') + ' = ';
+          item.textContent = paddedText;
+          exercisesDiv.appendChild(item);
+        });
+      }
+
+      function updatePrintCols() {
+        const selectedCols = document.querySelector('input[name="printCols"]:checked').value;
+        const styleSheet = document.styleSheets[0];
+        let ruleIndex = -1;
+        for (let i = 0; i < styleSheet.cssRules.length; i++) {
+          if (styleSheet.cssRules[i].media && styleSheet.cssRules[i].media.mediaText.includes('print')) {
+            ruleIndex = i;
+            break;
+          }
+        }
+        if (ruleIndex !== -1) {
+          styleSheet.deleteRule(ruleIndex);
+        }
+        const newRule = `
+          @media print {
+            body { background: none; }
+            .container { box-shadow: none; padding: 0; }
+            .controls, .buttons { display: none; }
+            .exercise-item { border: none; }
+            #exercises {
+              grid-template-columns: repeat(${selectedCols}, 1fr);
+              gap: 10px;
+            }
+          }
+        `.trim();
+        styleSheet.insertRule(newRule, styleSheet.cssRules.length);
+      }
+
+      generateBtn.addEventListener('click', () => {
+        generateExercises();
+        updatePrintCols();
+      });
+      printBtn.addEventListener('click', () => window.print());
+
+      // 初始生成并设置打印样式
+      updatePrintCols();
+      generateExercises();
+    });
+  </script>
+</body>
+
+</html>

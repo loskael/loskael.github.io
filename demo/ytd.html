@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进度环</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            transform: rotate(-90deg); /* 从顶部开始绘制 */
+        }
+
+        /* 底部背景环 */
+        .circle-bg {
+            fill: none;
+            stroke: #e9eef5;
+            stroke-width: 15;
+        }
+
+        /* 进度环 */
+        .circle-progress {
+            fill: none;
+            stroke: #8661ff; /* 紫色主题 */
+            stroke-width: 15;
+            stroke-linecap: round; /* 圆角边缘 */
+            stroke-dasharray: 816.8; /* 周长: 2 * π * 130 */
+            stroke-dashoffset: 816.8; 
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .percentage {
+            position: absolute;
+            font-size: 48px;
+            font-weight: 800;
+            color: #5b46ff;
+            letter-spacing: -1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <svg width="280" height="280">
+            <circle class="circle-bg" cx="140" cy="140" r="130"></circle>
+            <circle id="progress-bar" class="circle-progress" cx="140" cy="140" r="130"></circle>
+        </svg>
+        <div id="text-display" class="percentage">0.00%</div>
+    </div>
+
+    <script>
+        function updateProgress() {
+            // 1. 获取 URL 参数
+            const params = new URLSearchParams(window.location.search);
+            const startStr = params.get('start');
+            const stopStr = params.get('stop');
+
+            if (!startStr || !stopStr) {
+                document.getElementById('text-display').innerText = "缺少参数";
+                document.getElementById('text-display').style.fontSize = '24px';
+                return;
+            }
+
+            // 2. 解析日期
+            const start = new Date(startStr);
+            const stop = new Date(stopStr);
+            const now = new Date();
+
+            // 3. 计算百分比
+            const total = stop - start;
+            const elapsed = now - start;
+            
+            let percentage = (elapsed / total) * 100;
+
+            // 边界处理
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+
+            // 4. 更新 UI
+            const textDisplay = document.getElementById('text-display');
+            const progressBar = document.getElementById('progress-bar');
+            
+            // 格式化显示 (保留两位小数)
+            textDisplay.innerText = percentage.toFixed(2) + '%';
+
+            // SVG 偏移量计算 (周长为 816.8)
+            const circumference = 2 * Math.PI * 130;
+            const offset = circumference - (percentage / 100) * circumference;
+            progressBar.style.strokeDashoffset = offset;
+        }
+
+        // 初始化
+        updateProgress();
+    </script>
+</body>
+</html>

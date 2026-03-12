@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个性化睡眠质量提升方案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        .highlight-gradient-blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05));
+        }
+        .highlight-gradient-purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.05));
+        }
+        .highlight-gradient-green {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0), rgba(34, 197, 94, 0.05));
+        }
+        .highlight-gradient-orange {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.05));
+        }
+        .highlight-gradient-pink {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0), rgba(236, 72, 153, 0.05));
+        }
+        .highlight-gradient-cyan {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0), rgba(6, 182, 212, 0.05));
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <!-- 标题卡片 -->
+        <div class="card md:col-span-4 p-8 flex flex-col justify-center">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+            <div class="relative">
+                <div class="text-sm font-medium text-blue-500 mb-2">Sleep Quality Improvement Plan</div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800">个性化睡眠质量提升方案</h1>
+                <p class="text-lg text-gray-600 mt-4">基于你的长期睡眠问题，从睡眠评估、习惯调整、环境优化、心理调节等多个维度制定的系统性改善方案</p>
+            </div>
+        </div>
+
+        <!-- 睡眠状况评估卡片 -->
+        <div class="card md:col-span-2 md:row-span-2 p-8 flex flex-col">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+            <div class="relative flex-grow flex flex-col">
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-bed text-3xl text-purple-500 mr-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">睡眠状况评估</h2>
+                </div>
+                <div class="space-y-4 mb-6">
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-purple-800 mb-2">慢性失眠诊断标准</h3>
+                        <p class="text-sm text-purple-700">你的症状持续超过1年，符合每周至少3晚出现症状且持续3个月以上的慢性失眠症诊断标准。</p>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-purple-800 mb-2">主要症状表现</h3>
+                        <ul class="text-sm text-purple-700 space-y-1">
+                            <li>• 入睡困难：上床后超过30分钟仍无法入睡</li>
+                            <li>• 睡眠连续性差：夜间觉醒次数≥2次</li>
+                            <li>• 熬夜习惯：日常12点之后上床</li>
+                            <li>• 主观感受：睡眠质量偏低，影响日间功能</li>
+                        </ul>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-purple-800 mb-2">睡眠时相延迟分析</h3>
+                        <p class="text-sm text-purple-700">12点后上床的习惯提示可能存在睡眠时相延迟综合征(DSWPD)，需要通过时间疗法、褪黑素治疗和光照治疗进行调整。</p>
+                    </div>
+                </div>
+                <div class="mt-auto">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700">匹兹堡睡眠质量指数 (PSQI)</span>
+                        <span class="text-lg font-bold text-purple-600">16-18 分</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-purple-500 h-2.5 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">分数越高表示睡眠质量越差 (0-21分)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 睡眠质量趋势图 -->
+        <div class="card md:col-span-2 p-6 flex flex-col">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+            <div class="relative flex-grow flex flex-col">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">睡眠质量趋势分析</h3>
+                <div class="flex-grow h-64">
+                    <canvas id="sleepQualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 睡眠效率统计 -->
+        <div class="card md:col-span-2 p-6 flex flex-col">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+            <div class="relative flex-grow flex flex-col">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">睡眠效率统计</h3>
+                <div class="flex-grow h-64">
+                    <canvas id="sleepEfficiencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作息时间调整策略 -->
+        <div class="card md:col-span-3 p-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+            <div class="relative">
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-clock text-3xl text-blue-500 mr-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">渐进式作息时间调整策略</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-blue-50 text-left">
+                                <th class="px-4 py-3 text-sm font-semibold text-blue-800">周次</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-blue-800">目标上床时间</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-blue-800">起床时间</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-blue-800">调整说明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900">第1周</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">12:00 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">7:30 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">维持原有起床时间，逐步提前上床时间</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900">第2周</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">11:30 PM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">7:30 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">比上周提前30分钟</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900">第3周</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">11:00 PM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">7:30 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">继续提前30分钟</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900">第4周</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">10:30 PM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">7:30 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">达到理想的上床时间</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 bg-blue-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">关键要点</h4>
+                    <p class="text-sm text-blue-700">固定起床时间是改善睡眠的关键。无论前一晚睡了多少时间，都要在同一时间起床，包括周末。这有助于调节生物钟，积累睡眠压力，避免恶性循环。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 光照疗法 -->
+        <div class="card md:col-span-1 p-6 flex flex-col">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+            <div class="relative flex-grow flex flex-col">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-sun text-2xl text-orange-500 mr-3"></i>
+                    <h3 class="text-lg font-bold text-gray-800">光照疗法</h3>
+                </div>
+                <div class="space-y-3 flex-grow">
+                    <div class="bg-orange-50 rounded-lg p-3">
+                        <h4 class="font-medium text-orange-800 text-sm mb-1">早晨光照</h4>
+                        <p class="text-xs text-orange-700">起床后立即到户外接受自然光照10-30分钟，最好在6:00-8:00之间。</p>
+                    </div>
+                    <div class="bg-orange-50 rounded-lg p-3">
+                        <h4 class="font-medium text-orange-800 text-sm mb-1">夜间避光</h4>
+                        <p class="text-xs text-orange-700">晚上应减少强光刺激，特别是睡前2小时。使用暖光灯具，避免使用荧光灯或LED灯。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 睡眠环境优化 -->
+        <div class="card md:col-span-2 p-6">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+            <div class="relative">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-moon text-2xl text-green-500 mr-3"></i>
+                    <h3 class="text-lg font-bold text-gray-800">睡眠环境优化</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="font-medium text-green-800 mb-2">温度与湿度</h4>
+                        <ul class="text-sm text-green-700 space-y-1">
+                            <li>• 温度：18-22℃（最佳为18.3℃）</li>
+                            <li>• 湿度：40%-60%</li>
+                            <li>• 避免冷风直吹</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="font-medium text-green-800 mb-2">光线管理</h4>
+                        <ul class="text-sm text-green-700 space-y-1">
+                            <li>• 睡前2小时开始调暗室内灯光</li>
+                            <li>• 睡前1小时开启"数字宵禁"</li>
+                            <li>• 使用遮光窗帘确保卧室黑暗</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="font-medium text-green-800 mb-2">噪音控制</h4>
+                        <ul class="text-sm text-green-700 space-y-1">
+                            <li>• 理想睡眠环境噪音应低于30分贝</li>
+                            <li>• 使用白噪音机或风扇产生背景音</li>
+                            <li>• 使用隔音窗帘或双层玻璃窗</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="font-medium text-green-800 mb-2">床品选择</h4>
+                        <ul class="text-sm text-green-700 space-y-1">
+                            <li>• 选择适合自己的床垫和枕头</li>
+                            <li>• 定期更换床上用品，保持清洁</li>
+                            <li>• 选择透气性好的棉质床单和被罩</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 睡前行为管理 -->
+        <div class="card md:col-span-2 p-6">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-pink"></div>
+            <div class="relative">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-book-open text-2xl text-pink-500 mr-3"></i>
+                    <h3 class="text-lg font-bold text-gray-800">睡前行为管理</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-pink-50 rounded-lg p-4">
+                        <h4 class="font-medium text-pink-800 mb-2">睡前1小时仪式</h4>
+                        <div class="text-sm text-pink-700 space-y-1">
+                            <p><span class="font-medium">22:00-22:15</span> 温水浴/泡脚（38-40℃）</p>
+                            <p><span class="font-medium">22:15-22:30</span> 渐进式肌肉放松</p>
+                            <p><span class="font-medium">22:30-22:35</span> 4-7-8呼吸法</p>
+                            <p><span class="font-medium">22:35-23:00</span> 冥想练习</p>
+                        </div>
+                    </div>
+                    <div class="bg-pink-50 rounded-lg p-4">
+                        <h4 class="font-medium text-pink-800 mb-2">运动时间安排</h4>
+                        <p class="text-sm text-pink-700">下午或傍晚（16:00-18:00）是最佳运动时间。睡前4小时内避免高强度运动，中等强度运动至少在睡前90分钟完成。</p>
+                    </div>
+                    <div class="bg-pink-50 rounded-lg p-4">
+                        <h4 class="font-medium text-pink-800 mb-2">饮食与营养调整</h4>
+                        <p class="text-sm text-pink-700">晚餐在睡前3小时完成，避免过饱。增加含色氨酸的食物：牛奶、香蕉、坚果等。下午3点后完全避免任何含咖啡因的饮品。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CBT-I技术应用 -->
+        <div class="card md:col-span-2 p-6">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+            <div class="relative">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-brain text-2xl text-purple-500 mr-3"></i>
+                    <h3 class="text-lg font-bold text-gray-800">认知行为治疗(CBT-I)技术</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-medium text-purple-800 mb-2">刺激控制疗法</h4>
+                        <ul class="text-sm text-purple-700 space-y-1">
+                            <li>• 困了才上床，不要因为到了某个时间就上床</li>
+                            <li>• 如果躺床20分钟后仍无法入睡，立即起床到另一个房间</li>
+                            <li>• 床只用于睡眠和性，禁止在床上看电视、玩手机等</li>
+                            <li>• 固定起床时间，无论前一晚睡了多少</li>
+                        </ul>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-medium text-purple-800 mb-2">睡眠限制疗法</h4>
+                        <p class="text-sm text-purple-700">通过"先压缩后放宽"的方式提高睡眠效率。根据平均实际睡眠时间设定卧床时间，当睡眠效率超过85%时，每周增加15分钟卧床时间。</p>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-medium text-purple-800 mb-2">认知重构技术</h4>
+                        <p class="text-sm text-purple-700">识别和挑战对睡眠的错误认知和灾难化思维，建立理性认知，调整对睡眠的期望。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASMR辅助治疗 -->
+        <div class="card md:col-span-2 p-6">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+            <div class="relative">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-headphones-simple text-2xl text-cyan-500 mr-3"></i>
+                    <h3 class="text-lg font-bold text-gray-800">ASMR辅助治疗</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-cyan-50 rounded-lg p-4">
+                        <h4 class="font-medium text-cyan-800 mb-2">科学依据</h4>
+                        <p class="text-sm text-cyan-700">81%的ASMR使用者报告使用它来帮助入睡，70%认为它能有效减少失眠症状。ASMR能让大脑中与情绪调节相关的岛叶血流增加，提升深度放松的θ波与深度睡眠的δ波比例。</p>
+                    </div>
+                    <div class="bg-cyan-50 rounded-lg p-4">
+                        <h4 class="font-medium text-cyan-800 mb-2">使用建议</h4>
+                        <ul class="text-sm text-cyan-700 space-y-1">
+                            <li>• 在睡前30分钟开始听ASMR</li>
+                            <li>• 选择轻柔、缓慢的ASMR内容</li>
+                            <li>• 音量控制在30-40分贝</li>
+                            <li>• 每次使用不超过30分钟</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4周改善计划 -->
+        <div class="card md:col-span-4 p-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+            <div class="relative">
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-calendar-days text-3xl text-orange-500 mr-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">4周渐进式改善计划</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-orange-500 mb-2">第1周</div>
+                        <h3 class="font-semibold text-orange-800 mb-2">基础评估与准备</h3>
+                        <ul class="text-sm text-orange-700 space-y-1">
+                            <li>• 睡眠日记记录</li>
+                            <li>• 作息调整准备</li>
+                            <li>• 环境优化</li>
+                            <li>• 睡前仪式建立</li>
+                        </ul>
+                    </div>
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-orange-500 mb-2">第2周</div>
+                        <h3 class="font-semibold text-orange-800 mb-2">时间调整与刺激控制</h3>
+                        <ul class="text-sm text-orange-700 space-y-1">
+                            <li>• 上床时间提前到11:30 PM</li>
+                            <li>• 实施20分钟法则</li>
+                            <li>• 规律运动安排</li>
+                            <li>• 饮食调整</li>
+                        </ul>
+                    </div>
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-orange-500 mb-2">第3周</div>
+                        <h3 class="font-semibold text-orange-800 mb-2">深度放松与认知调整</h3>
+                        <ul class="text-sm text-orange-700 space-y-1">
+                            <li>• 上床时间提前到11:00 PM</li>
+                            <li>• 建立完整放松程序</li>
+                            <li>• 认知重构练习</li>
+                            <li>• 睡眠限制评估</li>
+                        </ul>
+                    </div>
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-orange-500 mb-2">第4周</div>
+                        <h3 class="font-semibold text-orange-800 mb-2">巩固与优化</h3>
+                        <ul class="text-sm text-orange-700 space-y-1">
+                            <li>• 争取达到10:30 PM上床</li>
+                            <li>• 方案优化</li>
+                            <li>• 长期计划制定</li>
+                            <li>• 效果评估</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 专业建议 -->
+        <div class="card md:col-span-4 p-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+            <div class="relative">
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-user-doctor text-3xl text-blue-500 mr-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">专业建议与注意事项</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-blue-800 mb-2">需要就医的情况</h3>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• 经过4-6周自我调节，症状没有改善</li>
+                            <li>• 伴随严重的日间困倦或情绪问题</li>
+                            <li>• 怀疑有睡眠呼吸暂停综合征</li>
+                            <li>• 自我调节无效，严重影响生活质量</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-blue-800 mb-2">长期维持策略</h3>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• 建立规律作息，周末与工作日差异不超过1小时</li>
+                            <li>• 保持规律运动和健康饮食</li>
+                            <li>• 学会识别和管理压力源</li>
+                            <li>• 保持良好的睡眠环境</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-blue-800 mb-2">心理支持建议</h3>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• 认识到失眠的可逆性，保持信心</li>
+                            <li>• 减少对睡眠的过度关注</li>
+                            <li>• 与家人朋友分享困扰，寻求支持</li>
+                            <li>• 记录每一个小进步，保持积极心态</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-6 bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-blue-700 italic">改善睡眠是一个系统工程，需要从多个方面入手。通过科学的方法和持续的努力，你的睡眠质量一定能够得到显著改善。记住，睡眠改善需要时间，不要期望一夜之间就有翻天覆地的变化。保持耐心，坚持执行计划，相信自己能够重新获得良好的睡眠。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 睡眠质量趋势图
+        const sleepQualityCtx = document.getElementById('sleepQualityChart').getContext('2d');
+        const sleepQualityChart = new Chart(sleepQualityCtx, {
+            type: 'line',
+            data: {
+                labels: ['第1天', '第2天', '第3天', '第4天', '第5天', '第6天', '第7天'],
+                datasets: [{
+                    label: '入睡时间 (分钟)',
+                    data: [45, 50, 42, 38, 40, 35, 32],
+                    borderColor: 'rgba(139, 92, 246, 0.8)',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: '夜间觉醒次数',
+                    data: [3, 2, 3, 2, 1, 2, 1],
+                    borderColor: 'rgba(236, 72, 153, 0.8)',
+                    backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 睡眠效率统计图
+        const sleepEfficiencyCtx = document.getElementById('sleepEfficiencyChart').getContext('2d');
+        const sleepEfficiencyChart = new Chart(sleepEfficiencyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['第1天', '第2天', '第3天', '第4天', '第5天', '第6天', '第7天'],
+                datasets: [{
+                    label: '睡眠效率 (%)',
+                    data: [65, 68, 72, 75, 78, 80, 82],
+                    backgroundColor: 'rgba(6, 182, 212, 0.7)',
+                    borderColor: 'rgba(6, 182, 212, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -120,6 +120,16 @@
       `许嘉阳,李钦诚`,
       `韩一洲,柯洁`,
     ].join(','),
+    UEFA2026: [
+      `巴黎,切尔西`,
+      `加拉塔萨雷,利物浦`,
+      `皇马,曼城`,
+      `亚特兰大,拜仁`,
+      `纽卡斯尔联,巴萨`,
+      `马竞,热刺`,
+      `博德闪耀,葡萄牙体育`,
+      `勒沃库森,阿森纳`,
+    ].join(','),
   };
   const params = new URLSearchParams(location.search);
   const player = String(matchs[params.get('match')] || params.get('player') || '').split(',').filter(v => !!v);

@@ -158,6 +158,16 @@
       `博德闪耀,葡萄牙体育`,
       `勒沃库森,阿森纳`,
     ].join(','),
+    NBA2026: [
+      `雷霆,太阳`,
+      `湖人,火箭`,
+      `马刺,开拓者`,
+      `掘金,森林狼`,
+      `活塞,魔术`,
+      `骑士,猛龙`,
+      `凯尔特人,76人`,
+      `尼克斯,老鹰`,
+    ].join(','),
   };
   const params = new URLSearchParams(location.search);
   const player = String(matchs[params.get('match')] || params.get('player') || '').split(',').filter(v => !!v);
